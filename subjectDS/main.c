@@ -39,6 +39,9 @@ int main() {
         display(s1);
         printf("===s2에 저장된 내용===\n");
         display(s2);
+
+        free(s1);
+        free(s2);
     }
 
     /*
