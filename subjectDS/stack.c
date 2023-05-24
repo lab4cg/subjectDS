@@ -6,7 +6,15 @@
 
 // 스택 초기화 함수
 void init_s_stack(StackType* s) {
+    s->capacity = 1;
     s->top = -1;
+    s->data = (element*)malloc(s->capacity * sizeof(element));
+
+    if (s->data == NULL) {
+        printf("data 메모리 할당 실패\n");
+        exit(1);
+    }
+
 }
 
 // 공백 상태 검출 함수
@@ -16,16 +24,31 @@ int is_s_empty(StackType* s) {
 
 // 포화 상태 검출 함수
 int is_s_full(StackType* s) {
-    return (s->top == (MAXSIZE - 1));
+    return (s->top == s->capacity - 1);
 }
 
 // 삽입함수
 void push(StackType* s, element item) {
-    if (is_s_full(s)) {
-        fprintf(stderr, "스택 포화 에러\n");
+    if (s->data == NULL) {
+        printf("data 할당된 공간이 없어서 push 불가\n");
         return;
     }
-    else s->data[++(s->top)] = item;
+    else if (s->data != NULL) {
+        if (is_s_full(s)) {
+            printf("스택이 꽉 찼습니다. 용량 재조정을 시작합니다. [capacity = %d -> ", s->capacity);
+            s->capacity *= 2;
+            printf("%d]", s->capacity);
+
+            s->data = (element*)realloc(s->data, s->capacity * sizeof(element)); // 메모리 조정
+
+            if (s->data == NULL) {
+                printf(" 실패!\n");
+                return;
+            }
+            printf(" 성공!\n");
+        }
+        s->data[++(s->top)] = item;
+    }
 }
 
 
@@ -33,8 +56,8 @@ void push(StackType* s, element item) {
 // 삭제함수
 element pop(StackType* s) {
     if (is_s_empty(s)) {
-        fprintf(stderr, "스택 공백 에러\n");
-        exit(1);
+        printf("스택이 비어있습니다.\n");
+        return;
     }
     else return s->data[(s->top)--];
 }
@@ -42,10 +65,22 @@ element pop(StackType* s) {
 // 피크함수
 element s_peek(StackType* s) {
     if (is_s_empty(s)) {
-        fprintf(stderr, "스택 공백 에러\n");
-        exit(1);
+        printf("스택이 비어있습니다.\n");
+        return;
     }
     else return s->data[s->top];
+}
+
+void display(StackType* s) {
+    if (is_s_empty(s)) {
+        printf("스택이 비어있습니다.\n");
+        return;
+    }
+    else { // 저장된 내용 보기
+        for (int i = s->top; i > -1; i--) {
+            printf("[%d] %c\n", i, s->data[i]);
+        }
+    }
 }
 
 
@@ -133,7 +168,7 @@ int eval(char exp[]) {
     return pop(&s);
 }
 
-int check_matcing(char* in) {
+int check_matching(char* in) {
     StackType s;
     char ch, open_ch;
     int i, n = strlen(in);
@@ -157,9 +192,7 @@ int check_matcing(char* in) {
                 }
                 break;
             }
-        
         }
-        
     }
     if (!is_s_empty(&s)) return 0;
 
@@ -192,11 +225,49 @@ int check_palin(char* in) {
 // ===== 스택 코드의 끝 =====
 int main9() {
 
-    //char* p = "{A[(i+1)]=0;}";
-    char n[30];
+    StackType* s1; // StackType를 가리키는 포인터 변수 선언
+    StackType* s2; // StackType를 가리키는 포인터 변수 선언
 
-    scanf("%s", n);
-    printf("%s\n", n);
+    s1 = (StackType*)malloc(sizeof(StackType)); // 메모리 동적할당 후 s에 주소값 저장
+    s2 = (StackType*)malloc(sizeof(StackType)); // 메모리 동적할당 후 s에 주소값 저장
+
+    init_s_stack(s1); // 스택 정보 초기화
+    init_s_stack(s2); // 스택 정보 초기화
+
+    if (s1 == NULL || s2 == NULL)
+        printf("스택 메모리 할당 실패\n");
+
+    else {
+        push(s1, 'A');
+        push(s2, 'B');
+        push(s1, 'C');
+        push(s2, 'D');
+
+        printf("s1에서 꺼낸 값 : %c\n", pop(s1));
+
+        push(s1, 'E');
+        push(s2, 'F');
+        push(s1, 'G');
+        push(s2, 'H');
+
+        printf("s2에서 꺼낸 값 : %c\n", pop(s2));
+
+        push(s1, 'I');
+        push(s2, 'J');
+
+        printf("===s1에 저장된 내용===\n");
+        display(s1);
+        printf("===s2에 저장된 내용===\n");
+        display(s2);
+
+        free(s1);
+        free(s2);
+    }
+    //char* p = "{A[(i+1)]=0;}";
+    //char n[30];
+
+    //scanf("%s", n);
+    //printf("%s\n", n);
 
     //if (check_matcing(n) == 1) printf("%s 성공\n", p);
     //else printf("%s 실패\n", p);

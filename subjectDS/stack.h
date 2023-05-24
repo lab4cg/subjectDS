@@ -1,9 +1,9 @@
 #pragma once
-#define MAXSIZE 100
 
 typedef int element;
 typedef struct {
-	element data[MAXSIZE];
+	element* data;
+	int capacity;
 	int top;
 } StackType;
 
@@ -13,6 +13,7 @@ int is_s_full(StackType* s);
 void push(StackType* s, element item);
 element pop(StackType* s);
 element s_peek(StackType* s);
+void display(StackType* s);
 
 int getPriority(char op);
 char* infix_to_postfix(char exp[]);
