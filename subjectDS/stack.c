@@ -169,22 +169,24 @@ int eval(char exp[]) {
 }
 
 int check_matching(char* in) {
-    StackType s;
+    StackType *s;
+    s = (StackType*)malloc(sizeof(StackType));
+
     char ch, open_ch;
     int i, n = strlen(in);
-    init_s_stack(&s);
+    init_s_stack(s);
 
     for (i = 0; i < n; i++) {
         ch = in[i];
 
         switch (ch) {
         case '(': case '[': case '{':
-            push(&s, ch);
+            push(s, ch);
             break;
         case ')': case ']': case '}':
-            if (is_s_empty(&s)) return 0;
+            if (is_s_empty(s)) return 0;
             else {
-                open_ch = pop(&s);
+                open_ch = pop(s);
                 if ((open_ch == '(' && ch != ')') ||
                     (open_ch == '[' && ch != ']') ||
                     (open_ch == '{' && ch != '}')) {
@@ -194,20 +196,25 @@ int check_matching(char* in) {
             }
         }
     }
-    if (!is_s_empty(&s)) return 0;
-
+    if (!is_s_empty(s)) {
+        free(s);
+        return 0;
+    }
+    free(s);
     return 1;
 }
 
 int check_palin(char* in) {
-    StackType s;
+    StackType* s;
+    s = (StackType*)malloc(sizeof(StackType));
+
     char ch;
     int i, n = strlen(in);
-    init_s_stack(&s);
+    init_s_stack(s);
 
     //스택에 매개변수로 받은 문자열을 문자마다 차례차례 삽입해 저장
     for (i = 0; i < n; i++) {
-        push(&s, in[i]);
+        push(s, in[i]);
     }
 
     for (i = 0; i < n; i++) {
@@ -215,7 +222,7 @@ int check_palin(char* in) {
         ch = in[i];
 
         //ch와 pop(&s)은 문자열 상에서 대칭인 문자, 즉 이 둘이 같지 않으면 회문이 아님 -> 0을 리턴
-        if (ch != pop(&s)) return 0;
+        if (ch != pop(s)) return 0;
 
     }
 
@@ -263,23 +270,6 @@ int main9() {
         free(s1);
         free(s2);
     }
-    //char* p = "{A[(i+1)]=0;}";
-    //char n[30];
 
-    //scanf("%s", n);
-    //printf("%s\n", n);
-
-    //if (check_matcing(n) == 1) printf("%s 성공\n", p);
-    //else printf("%s 실패\n", p);
-    /*
-    char* s = "3+6/2+2*(1+3)";
-    char new_s[20];
-    printf("중위표기수식 %s \n", s);
-    printf("후위표기수식 ");
-    strcpy(new_s, infix_to_postfix(s));
-    printf("%s\n", new_s);
-
-    printf("계산 결과: %d\n", eval(new_s));
-    */
     return 0;
 }
