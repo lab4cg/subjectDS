@@ -5,7 +5,10 @@
 #include "stack.h"
 
 int main() {
+    TwoStacksDisplay();
     
+
+    /*
     char* p = "{A[(i+1)]=0;}";
     //char n[30];
 

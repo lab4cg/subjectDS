@@ -1,6 +1,6 @@
 #pragma once
 
-typedef int element;
+typedef char element;
 typedef struct {
 	element* data;
 	int capacity;
@@ -14,6 +14,9 @@ void push(StackType* s, element item);
 element pop(StackType* s);
 element s_peek(StackType* s);
 void display(StackType* s);
+void DeleteStack(StackType* s);
+
+void TwoStacksDisplay();
 
 int getPriority(char op);
 char* infix_to_postfix(char exp[]);

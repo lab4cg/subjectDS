@@ -7,7 +7,7 @@
 //오류처리함수
 void l_error(char* message) {
 	printf("%s\n", message);
-	exit(1);
+	exit(1); 
 }
 
 // 맨 앞에 새 노드 삽입
