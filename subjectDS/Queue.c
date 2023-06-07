@@ -4,12 +4,6 @@
 #include "Queue.h"
 
 
-// 오류 함수
-void error(char* message) {
-	fprintf(stderr, "%s\n", message);
-	exit(1);
-}
-
 // 큐 초기화 함수
 void init_q_queue(QueueType* q) {
 	q->front = q->rear = 0;
@@ -41,21 +35,30 @@ void queue_print(QueueType* q) {
 
 // 원형큐 삽입함수
 void enqueue(QueueType* q, element item) {
-	if (is_q_full(q)) error("큐가 포화상태입니다.");
+	if (is_q_full(q)) {
+		printf("큐가 포화상태입니다.\n");
+		return;
+	}
 	q->rear = (q->rear + 1) % MAXSIZE;
 	q->data[q->rear] = item;
 }
 
 // 삭제 함수
 element dequeue(QueueType* q) {
-	if (is_q_empty(q)) error("큐가 공백상태입니다.");
+	if (is_q_empty(q)) {
+		printf("큐가 공백상태입니다.\n");
+		return 0;
+	}
 	q->front = (q->front + 1) % MAXSIZE;
 	return q->data[q->front];
 }
 
 // 보기 함수
 element q_peek(QueueType* q) {
-	if (is_q_empty(q)) error("큐가 공백상태입니다.");
+	if (is_q_empty(q)) {
+		printf("큐가 공백상태입니다.\n");
+		return 0;
+	}
 	return q->data[(q->front + 1) % MAXSIZE];
 }
 

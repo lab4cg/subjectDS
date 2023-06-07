@@ -7,8 +7,7 @@ typedef struct {
 	int front, rear;
 }QueueType;
 
-void error(char* message); // 오류메시지
-void init_queue(QueueType* q); // 큐 초기화
+void init_q_queue(QueueType* q); // 큐 초기화
 int is_q_empty(QueueType* q); // 공백 상태 검출
 int is_q_full(QueueType* q); // 포화 상태 검출
 void queue_print(QueueType* q); // 원형큐 출력
